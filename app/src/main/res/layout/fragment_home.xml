@@ -16,14 +16,14 @@
         android:textColor="@color/sunsetOrange"
         android:textSize="24dp"
         android:paddingStart="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/eventList"
+        app:layout_constraintBottom_toTopOf="@+id/eventListRecycler"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/eventList"
+        android:id="@+id/eventListRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="40dp" />
