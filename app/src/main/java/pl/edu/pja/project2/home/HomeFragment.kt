@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import pl.edu.pja.project2.R
+import pl.edu.pja.project2.auth.AuthFragmentDirections
 import pl.edu.pja.project2.databinding.FragmentAuthBinding
 import pl.edu.pja.project2.databinding.FragmentHomeBinding
 
@@ -27,7 +29,6 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding!!.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,12 +41,20 @@ class HomeFragment : Fragment() {
         homeAdapter = HomeAdapter(eventList, ::onItemSave)
         recyclerView.adapter = homeAdapter
 
-        eventChangeListener()
-        saveFireStore()
+//        eventChangeListener()
+//        saveFireStore()
+        navigateToAddEvent()
+
     }
 
     private fun onItemSave(eventName: String, localisation: String, image: ImageView, date: String){
         eventList.add(EventModel(eventName, localisation, image, date, "", ""))
+    }
+
+    private fun navigateToAddEvent(){
+        binding.addNewEventButton.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAddEventFragment())
+        }
     }
 
 

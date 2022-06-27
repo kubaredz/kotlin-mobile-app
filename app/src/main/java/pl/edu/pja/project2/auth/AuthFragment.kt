@@ -46,7 +46,7 @@ class AuthFragment : Fragment() {
     }
 
 
-    private fun navigateToHomeFragment() {
+    private fun navigateToHomeFragment(name: String) {
 //        val navHostFragment =
 //            requireActivity().supportFragmentManager.findFragmentById(R.id.main) as NavHostFragment
 //        val navController = navHostFragment.navController
@@ -55,7 +55,9 @@ class AuthFragment : Fragment() {
 //            AuthFragmentDirections
 //                .actionAuthFragmentToHomeFragment()
 //        navController.navigate(action)
-        findNavController().navigate(AuthFragmentDirections.actionAuthFragmentToHomeFragment())
+        findNavController().navigate(AuthFragmentDirections.actionAuthFragmentToHomeFragment(
+            email = name
+        ))
     }
 
     private fun onRegisterLoginClick() {
@@ -97,7 +99,7 @@ class AuthFragment : Fragment() {
                 try {
                     auth.signInWithEmailAndPassword(email, password).await()
                     withContext(Dispatchers.Main) {
-                            navigateToHomeFragment()
+                            navigateToHomeFragment(email)
                             Log.d("test123", "zalogowany")
 
                         checkLoggedInState()
@@ -116,7 +118,7 @@ class AuthFragment : Fragment() {
             binding.tvLoggedIn.text = "You are not logged in"
         } else {
             binding.tvLoggedIn.text = "You are logged in!"
-            navigateToHomeFragment()
+            navigateToHomeFragment(auth.currentUser.toString())
         }
     }
 
