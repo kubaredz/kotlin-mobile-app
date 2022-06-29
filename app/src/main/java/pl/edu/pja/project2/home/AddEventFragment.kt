@@ -76,6 +76,7 @@ class AddEventFragment : Fragment() {
             FirebaseStorageManager.imgUrl,
             getData(),
             getEmail(),
+            binding.eventLocalization.text.toString(),
             requireContext()
         )
     }

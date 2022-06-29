@@ -33,6 +33,32 @@
         tools:ignore="MissingConstraints" />
 
     <TextView
+        android:id="@+id/eventLocalizationLabel"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:text="Nazwa lokalizacji:"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/eventTitle"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/eventLocalization"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:hint="Lokalizacja:"
+        android:textColor="@color/black"
+        android:textColorHint="@color/sunsetOrange"
+        app:layout_constraintTop_toBottomOf="@+id/eventLocalizationLabel"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
         android:id="@+id/eventNoteLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +68,7 @@
         android:text="Notatka:"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/eventTitle"
+        app:layout_constraintTop_toBottomOf="@+id/eventLocalization"
         tools:ignore="MissingConstraints" />
 
     <EditText

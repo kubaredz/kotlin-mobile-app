@@ -7,7 +7,10 @@ import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.flow.MutableStateFlow
+import pl.edu.pja.project2.home.HomeFragment
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FirebaseStorageManager {
     private val mStorageRef = FirebaseStorage.getInstance().reference
@@ -22,9 +25,10 @@ class FirebaseStorageManager {
         uploadTask.addOnSuccessListener {
             Log.e("Frebase", "Image Upload success")
             mProgressDialog.dismiss()
-            val uploadedURL = mStorageRef.child("posts/${date}.png").downloadUrl.addOnCompleteListener {
-                imgUrl = it.result.toString()
-            }
+            val uploadedURL =
+                mStorageRef.child("posts/${date}.png").downloadUrl.addOnCompleteListener {
+                    imgUrl = it.result.toString()
+                }
 
             Log.e("Firebase", "Uploaded $uploadedURL")
         }.addOnFailureListener {
@@ -33,7 +37,15 @@ class FirebaseStorageManager {
         }
     }
 
-    fun saveFireStore(eventTitle: String, description: String, imagePath: String, data: String, author: String, context: Context) {
+    fun saveFireStore(
+        eventTitle: String,
+        description: String,
+        imagePath: String,
+        data: String,
+        author: String,
+        eventLocalization: String,
+        context: Context
+    ) {
         val db = FirebaseFirestore.getInstance()
         val event: MutableMap<String, Any> = HashMap()
         event["eventTitle"] = eventTitle
@@ -41,6 +53,7 @@ class FirebaseStorageManager {
         event["imagePath"] = imagePath
         event["data"] = data
         event["author"] = author
+        event["eventLocalization"] = eventLocalization
 
         db.collection("events")
             .add(event)
@@ -59,24 +72,41 @@ class FirebaseStorageManager {
             .get()
             .addOnCompleteListener {
 
-                val result: StringBuffer = StringBuffer()
+//                val result: StringBuffer = StringBuffer()
 
                 if (it.isSuccessful) {
                     for (document in it.result!!) {
-                        result.append(document.data.getValue("author")).append(" ")
-                            .append(document.data.getValue("eventTitle")).append("\n\n")
-                            .append(document.data.getValue("description")).append("\n\n")
-                            .append(document.data.getValue("imagePath")).append("\n\n")
-                            .append(document.data.getValue("data")).append("\n\n")
-                        Log.d("result", result.toString())
+//                        result.append(document.data.getValue("author")).append(" ")
+//                            .append(document.data.getValue("eventTitle")).append("\n\n")
+//                            .append(document.data.getValue("description")).append("\n\n")
+//                            .append(document.data.getValue("imagePath")).append("\n\n")
+//                            .append(document.data.getValue("data")).append("\n\n")
+//                        Log.d("result", result.toString())
+                        elementList.add(
+                            arrayListOf(
+                                document.data.getValue("author").toString(),
+                                document.data.getValue("eventTitle").toString(),
+                                document.data.getValue("description").toString(),
+                                document.data.getValue("imagePath").toString(),
+                                document.data.getValue("data").toString(),
+                                document.data.getValue("eventLocalization").toString()
+                            )
+                        )
+                        Log.d("value", "W PETLI ${elementList}")
+
                     }
-                 //TODO Fetch data
+                    Log.d("value", "${elementList}")
+                    HomeFragment().setGoalsData.value++
+                    //TODO Fetch data
                 }
             }
 
     }
 
-    companion object{
-       var imgUrl = ""
+
+    companion object {
+        var imgUrl = ""
+        var elementList = arrayListOf<ArrayList<String>>()
     }
+
 }
