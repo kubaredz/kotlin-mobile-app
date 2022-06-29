@@ -56,7 +56,6 @@ class AuthFragment : Fragment() {
 //                .actionAuthFragmentToHomeFragment()
 //        navController.navigate(action)
         findNavController().navigate(AuthFragmentDirections.actionAuthFragmentToHomeFragment(
-            email = name
         ))
     }
 
