@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.navArgs
 import com.github.dhaval2404.imagepicker.ImagePicker
 import pl.edu.pja.project2.FirebaseStorageManager
 import pl.edu.pja.project2.MainActivity
@@ -21,6 +22,7 @@ import kotlin.math.log
 
 class AddEventFragment : Fragment() {
     lateinit var binding: FragmentAddEventBinding
+    private val args: AddEventFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,10 +56,14 @@ class AddEventFragment : Fragment() {
                     .show()
             } else {
                 FirebaseStorageManager().uploadImage(requireContext(), imgURI)
-                FirebaseStorageManager().saveFireStore(binding.eventTitle.toString(), binding.eventNote.toString(), imgURI.toString(), getData(), getEmail())
+                FirebaseStorageManager().saveFireStore(binding.eventTitle.toString(), binding.eventNote.toString(), imgURI.toString(), getData(), getEmail(), requireContext())
             }
 
         }
+    }
+
+    private fun getEmail(): String {
+        return args.email
     }
 
     private fun getData(): String {

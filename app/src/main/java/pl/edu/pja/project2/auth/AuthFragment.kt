@@ -47,16 +47,7 @@ class AuthFragment : Fragment() {
 
 
     private fun navigateToHomeFragment(name: String) {
-//        val navHostFragment =
-//            requireActivity().supportFragmentManager.findFragmentById(R.id.main) as NavHostFragment
-//        val navController = navHostFragment.navController
-
-//        val action =
-//            AuthFragmentDirections
-//                .actionAuthFragmentToHomeFragment()
-//        navController.navigate(action)
-        findNavController().navigate(AuthFragmentDirections.actionAuthFragmentToHomeFragment(
-        ))
+        findNavController().navigate(AuthFragmentDirections.actionAuthFragmentToHomeFragment(name))
     }
 
     private fun onRegisterLoginClick() {

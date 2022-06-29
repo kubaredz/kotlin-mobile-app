@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -23,6 +24,7 @@ class HomeFragment : Fragment() {
     lateinit var eventList: ArrayList<EventModel>
     lateinit var homeAdapter: HomeAdapter
 
+    private val args: HomeFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +55,7 @@ class HomeFragment : Fragment() {
 
     private fun navigateToAddEvent(){
         binding.addNewEventButton.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAddEventFragment())
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAddEventFragment(args.email))
         }
     }
 

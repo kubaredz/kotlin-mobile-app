@@ -15,7 +15,7 @@
         <argument
             android:name="email"
             app:argType="string"
-            android:defaultValue="null" />
+            />
     </fragment>
     <fragment
         android:id="@+id/authFragment"
@@ -28,7 +28,7 @@
         <argument
             android:name="email"
             app:argType="string"
-            android:defaultValue="null" />
+            />
     </fragment>
     <fragment
         android:id="@+id/addEventFragment"
@@ -38,6 +38,6 @@
         <argument
             android:name="email"
             app:argType="string"
-            android:defaultValue="null" />
+            />
     </fragment>
 </navigation>
