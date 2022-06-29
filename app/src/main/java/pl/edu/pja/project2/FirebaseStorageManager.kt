@@ -12,6 +12,7 @@ import java.util.*
 class FirebaseStorageManager {
     private val mStorageRef = FirebaseStorage.getInstance().reference
     private lateinit var mProgressDialog: ProgressDialog
+
     fun uploadImage(context: Context, imageFileUri: Uri) {
         mProgressDialog = ProgressDialog(context)
         mProgressDialog.setMessage("Please wait, image being upload")
@@ -21,8 +22,10 @@ class FirebaseStorageManager {
         uploadTask.addOnSuccessListener {
             Log.e("Frebase", "Image Upload success")
             mProgressDialog.dismiss()
-            val uploadedURL = mStorageRef.child("posts/${date}.png").downloadUrl
-            //TODO Nie loguje logów w konsoli
+            val uploadedURL = mStorageRef.child("posts/${date}.png").downloadUrl.addOnCompleteListener {
+                imgUrl = it.result.toString()
+            }
+
             Log.e("Firebase", "Uploaded $uploadedURL")
         }.addOnFailureListener {
             Log.e("Frebase", "Image Upload fail")
@@ -47,12 +50,12 @@ class FirebaseStorageManager {
             .addOnFailureListener {
                 Toast.makeText(context, "record Failed to add ", Toast.LENGTH_SHORT).show()
             }
-        readFireStoreData()
+//        readFireStoreData()
     }
 
     fun readFireStoreData() {
         val db = FirebaseFirestore.getInstance()
-        db.collection("users")
+        db.collection("events")
             .get()
             .addOnCompleteListener {
 
@@ -60,12 +63,20 @@ class FirebaseStorageManager {
 
                 if (it.isSuccessful) {
                     for (document in it.result!!) {
-                        result.append(document.data.getValue("firstName")).append(" ")
-                            .append(document.data.getValue("lastName")).append("\n\n")
+                        result.append(document.data.getValue("author")).append(" ")
+                            .append(document.data.getValue("eventTitle")).append("\n\n")
+                            .append(document.data.getValue("description")).append("\n\n")
+                            .append(document.data.getValue("imagePath")).append("\n\n")
+                            .append(document.data.getValue("data")).append("\n\n")
+                        Log.d("result", result.toString())
                     }
                  //TODO Fetch data
                 }
             }
 
+    }
+
+    companion object{
+       var imgUrl = ""
     }
 }

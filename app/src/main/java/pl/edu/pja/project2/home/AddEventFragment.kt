@@ -10,8 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.dhaval2404.imagepicker.ImagePicker
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import pl.edu.pja.project2.FirebaseStorageManager
 import pl.edu.pja.project2.MainActivity
 import pl.edu.pja.project2.databinding.FragmentAddEventBinding
@@ -23,6 +26,7 @@ import kotlin.math.log
 class AddEventFragment : Fragment() {
     lateinit var binding: FragmentAddEventBinding
     private val args: AddEventFragmentArgs by navArgs()
+    private var number = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,17 +53,31 @@ class AddEventFragment : Fragment() {
 
         }
         binding.addEvent.setOnClickListener {
-            onRefresh()
-            val imgURI = binding.addEvent.tag as Uri?
+//            val imgURI = binding.addEvent.tag as Uri?
+            val imgURI = Uri.parse(MainActivity.eventImage)
             if (imgURI == null) {
                 Toast.makeText(requireContext(), "Please select image first", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                FirebaseStorageManager().uploadImage(requireContext(), imgURI)
-                FirebaseStorageManager().saveFireStore(binding.eventTitle.toString(), binding.eventNote.toString(), imgURI.toString(), getData(), getEmail(), requireContext())
+                runBlocking { // this: CoroutineScope
+                    launch { saveFireStore(imgURI.toString()) }
+                    FirebaseStorageManager().uploadImage(requireContext(), imgURI)
+                }
+                findNavController().popBackStack()
             }
-
+            onRefresh()
         }
+    }
+
+    suspend fun saveFireStore(imgURI: String) {
+        FirebaseStorageManager().saveFireStore(
+            binding.eventTitle.text.toString(),
+            binding.eventNote.text.toString(),
+            FirebaseStorageManager.imgUrl,
+            getData(),
+            getEmail(),
+            requireContext()
+        )
     }
 
     private fun getEmail(): String {

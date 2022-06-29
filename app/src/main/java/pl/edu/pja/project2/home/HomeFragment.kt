@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import pl.edu.pja.project2.FirebaseStorageManager
 import pl.edu.pja.project2.R
 import pl.edu.pja.project2.auth.AuthFragmentDirections
 import pl.edu.pja.project2.databinding.FragmentAuthBinding
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
 //        eventChangeListener()
 //        saveFireStore()
         navigateToAddEvent()
-
+        fetchData()
     }
 
     private fun onItemSave(eventName: String, localisation: String, image: ImageView, date: String){
@@ -57,6 +58,10 @@ class HomeFragment : Fragment() {
         binding.addNewEventButton.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAddEventFragment(args.email))
         }
+    }
+
+    fun fetchData(){
+        FirebaseStorageManager().readFireStoreData()
     }
 
 
