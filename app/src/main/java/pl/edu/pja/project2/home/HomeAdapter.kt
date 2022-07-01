@@ -33,12 +33,14 @@ class HomeAdapter (
     // TODO
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         // TODO
-        if(items[position].isNotEmpty()) {
+        if(items.isNotEmpty()) {
+            if (items[position].isNotEmpty()) {
 //            Log.d("value", "Adapter: ${items[position]}")
-            holder.nameEvent.text = items[position][1]
-            holder.location.text = items[position][5]
-//        holder.image.setImageDrawable(items[position][3])
-            holder.date.text = items[position][4]
+                holder.nameEvent.text = items[position][1]
+                holder.location.text = items[position][5]
+//                holder.image.setImageDrawable(items[position][3])
+                holder.date.text = items[position][4]
+            }
         }
 
         // TODO

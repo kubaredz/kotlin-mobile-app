@@ -41,7 +41,6 @@ class AuthFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         auth = FirebaseAuth.getInstance()
 
-
         onRegisterLoginClick()
     }
 
@@ -114,7 +113,7 @@ class AuthFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        auth.signOut()
+//        auth.signOut()
         checkLoggedInState()
     }
 

@@ -41,14 +41,14 @@
         app:srcCompat="@drawable/ic_to_do"
         app:tint="@color/beige" />
 
-    <Button
-        android:id="@+id/btnRefresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="680dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="3dp"
-        android:text="Refresh"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/addNewEventButton"></Button>
+<!--    <Button-->
+<!--        android:id="@+id/btnRefresh"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="680dp"-->
+<!--        android:layout_marginEnd="30dp"-->
+<!--        android:layout_marginBottom="3dp"-->
+<!--        android:text="Refresh"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/addNewEventButton"></Button>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

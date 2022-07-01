@@ -10,11 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.dhaval2404.imagepicker.ImagePicker
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import pl.edu.pja.project2.FirebaseStorageManager
 import pl.edu.pja.project2.MainActivity
 import pl.edu.pja.project2.databinding.FragmentAddEventBinding
@@ -27,6 +30,7 @@ class AddEventFragment : Fragment() {
     lateinit var binding: FragmentAddEventBinding
     private val args: AddEventFragmentArgs by navArgs()
     private var number = 0
+    var imgURI: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,35 +54,47 @@ class AddEventFragment : Fragment() {
                 .compress(1024)
                 .maxResultSize(1080, 1080)
                 .start()
-
+        }
+        binding.checkImage.setOnClickListener {
+            onRefresh()
+            imgURI = Uri.parse(MainActivity.eventImage)
+            FirebaseStorageManager().uploadImage(requireContext(), imgURI!!)
         }
         binding.addEvent.setOnClickListener {
 //            val imgURI = binding.addEvent.tag as Uri?
-            val imgURI = Uri.parse(MainActivity.eventImage)
             if (imgURI == null) {
                 Toast.makeText(requireContext(), "Please select image first", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                runBlocking { // this: CoroutineScope
-                    launch { saveFireStore(imgURI.toString()) }
-                    FirebaseStorageManager().uploadImage(requireContext(), imgURI)
+                lifecycleScope.launch {
+                    FirebaseStorageManager.triggerImage.collect {
+                        if (it != "") {
+                            saveFireStore(it)
+                        }
+                    }
                 }
-                findNavController().popBackStack()
+                // TODO
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(2500)
+                    findNavController().popBackStack()
+                }
             }
-            onRefresh()
+//            onRefresh()
         }
     }
+//    }
 
-    suspend fun saveFireStore(imgURI: String) {
+    fun saveFireStore(imgURI: String) {
         FirebaseStorageManager().saveFireStore(
             binding.eventTitle.text.toString(),
             binding.eventNote.text.toString(),
-            FirebaseStorageManager.imgUrl,
+            imgURI,
             getData(),
             getEmail(),
             binding.eventLocalization.text.toString(),
             requireContext()
         )
+        Log.d("imgurl", "${imgURI}")
     }
 
     private fun getEmail(): String {
@@ -91,9 +107,9 @@ class AddEventFragment : Fragment() {
         return sdf.format(Date())
     }
 
-    fun onRefresh(){
+    fun onRefresh() {
         var uri = Uri.parse(MainActivity.eventImage)
         binding.eventImage.setImageURI(uri)
-            binding.addImage.tag = uri
+        binding.addImage.tag = uri
     }
 }

@@ -7,7 +7,12 @@ import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import pl.edu.pja.project2.home.AddEventFragment
 import pl.edu.pja.project2.home.HomeFragment
 import java.util.*
 import kotlin.collections.ArrayList
@@ -23,11 +28,14 @@ class FirebaseStorageManager {
         val date = Date()
         val uploadTask = mStorageRef.child("posts/${date}.png").putFile(imageFileUri)
         uploadTask.addOnSuccessListener {
-            Log.e("Frebase", "Image Upload success")
+            Log.e("Firebase", "Image Upload success")
             mProgressDialog.dismiss()
             val uploadedURL =
                 mStorageRef.child("posts/${date}.png").downloadUrl.addOnCompleteListener {
                     imgUrl = it.result.toString()
+                    Log.d("value", "VALUE FIREBASE IMG $imgUrl")
+                    _triggerImage.value = imgUrl
+
                 }
 
             Log.e("Firebase", "Uploaded $uploadedURL")
@@ -59,29 +67,23 @@ class FirebaseStorageManager {
             .add(event)
             .addOnSuccessListener {
                 Toast.makeText(context, "record added successfully ", Toast.LENGTH_SHORT).show()
+                Log.d("finish", "READ DB")
+                readFireStoreData()
             }
             .addOnFailureListener {
+                Log.d("finish", "FAIL READ DB")
                 Toast.makeText(context, "record Failed to add ", Toast.LENGTH_SHORT).show()
             }
-//        readFireStoreData()
     }
 
     fun readFireStoreData() {
         val db = FirebaseFirestore.getInstance()
         db.collection("events")
             .get()
-            .addOnCompleteListener {
-
-//                val result: StringBuffer = StringBuffer()
-
+            .addOnCompleteListener{
                 if (it.isSuccessful) {
+                    elementList.clear()
                     for (document in it.result!!) {
-//                        result.append(document.data.getValue("author")).append(" ")
-//                            .append(document.data.getValue("eventTitle")).append("\n\n")
-//                            .append(document.data.getValue("description")).append("\n\n")
-//                            .append(document.data.getValue("imagePath")).append("\n\n")
-//                            .append(document.data.getValue("data")).append("\n\n")
-//                        Log.d("result", result.toString())
                         elementList.add(
                             arrayListOf(
                                 document.data.getValue("author").toString(),
@@ -92,21 +94,23 @@ class FirebaseStorageManager {
                                 document.data.getValue("eventLocalization").toString()
                             )
                         )
-                        Log.d("value", "W PETLI ${elementList}")
-
                     }
-                    Log.d("value", "${elementList}")
-                    HomeFragment().setGoalsData.value++
+                    Log.d("value", "TRIGGER FB ${elementList}")
+                        _setGoalsData.value = elementList
+
                     //TODO Fetch data
                 }
             }
-
     }
 
 
     companion object {
         var imgUrl = ""
         var elementList = arrayListOf<ArrayList<String>>()
+        var _setGoalsData = MutableStateFlow(arrayListOf<ArrayList<String>>())
+        val setGoalsData = _setGoalsData.asStateFlow()
+        var _triggerImage = MutableStateFlow("")
+        val triggerImage = _triggerImage.asStateFlow()
     }
 
 }

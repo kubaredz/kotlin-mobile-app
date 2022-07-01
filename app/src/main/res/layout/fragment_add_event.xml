@@ -113,11 +113,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
+        android:layout_marginTop="3dp"
         android:backgroundTint="@color/sunsetOrange"
         android:text="Znajdź obrazek"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventImage"/>
+        app:layout_constraintTop_toBottomOf="@id/eventImage" />
+
+    <Button
+        android:id="@+id/checkImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:backgroundTint="@color/sunsetOrange"
+        android:text="Zatwierdź obrazek"
+        app:layout_constraintBottom_toTopOf="@+id/addEvent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addImage" />
 
     <Button
         android:id="@+id/addEvent"
