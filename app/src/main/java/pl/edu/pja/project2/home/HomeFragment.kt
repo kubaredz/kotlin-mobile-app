@@ -1,6 +1,9 @@
 package pl.edu.pja.project2.home
 
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.text.Layout
+import android.util.Base64
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,6 +28,7 @@ import pl.edu.pja.project2.R
 import pl.edu.pja.project2.auth.AuthFragmentDirections
 import pl.edu.pja.project2.databinding.FragmentAuthBinding
 import pl.edu.pja.project2.databinding.FragmentHomeBinding
+import java.io.ByteArrayOutputStream
 
 
 class HomeFragment : Fragment() {
@@ -53,7 +57,7 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         eventList = arrayListOf()
-        homeAdapter = HomeAdapter(eventList, ::onItemSave, ::onItemClicked)
+        homeAdapter = HomeAdapter(eventList, ::onItemSave, ::onItemClicked, ::onItemDeleted)
         recyclerView.adapter = homeAdapter
         homeAdapter.items = arrayListOf(arrayListOf())
         homeAdapter.notifyDataSetChanged()
@@ -65,15 +69,26 @@ class HomeFragment : Fragment() {
 //        refreshData()
     }
 
+    private fun onItemDeleted(id: Int, idFirebase: String) {
+// method delete z firebase
+
+// 6
+        Log.d("Info", "test TRIGGER")
+        db.collection("events").document(idFirebase).delete()
+        homeAdapter.items.removeAt(id)
+        homeAdapter.notifyDataSetChanged()
+    }
+
     override fun onResume() {
         super.onResume()
         fetchData()
     }
 
-    private fun onItemClicked() {
-//        findNavController().navigate(HomeFragmentDirections.)
-        // TODO
-        // NAVIGATE FURTHER i SET DATA ARGUMENTS
+    private fun onItemClicked(eventName: String, eventDesc: String, bitmap: Bitmap) {
+        Log.d("Info", "test TRIGGERonItemClicked ")
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToTaskFragment(
+            eventName, eventDesc, BitMapToString(bitmap)
+        ))
     }
 
     private fun refreshRecyclerView() {
@@ -90,6 +105,9 @@ class HomeFragment : Fragment() {
                     } else {
                         homeAdapter.items.clear()
                         homeAdapter.notifyDataSetChanged()
+                        // .sortByDescending { it.length }
+                        it.sortByDescending { it -> it[4] }
+                        // [[]]
                         homeAdapter.items = it
                         Log.d("value", "FLOW REPEAT ${it}")
                         homeAdapter.notifyDataSetChanged()
@@ -134,6 +152,13 @@ class HomeFragment : Fragment() {
                 )
             )
         }
+    }
+
+    fun BitMapToString(bitmap: Bitmap): String {
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val b = baos.toByteArray()
+        return Base64.encodeToString(b, Base64.DEFAULT)
     }
 
     fun fetchData() {

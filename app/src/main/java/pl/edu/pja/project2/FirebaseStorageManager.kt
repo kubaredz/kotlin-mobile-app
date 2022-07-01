@@ -91,7 +91,8 @@ class FirebaseStorageManager {
                                 document.data.getValue("description").toString(),
                                 document.data.getValue("imagePath").toString(),
                                 document.data.getValue("data").toString(),
-                                document.data.getValue("eventLocalization").toString()
+                                document.data.getValue("eventLocalization").toString(),
+                                document.id
                             )
                         )
                     }

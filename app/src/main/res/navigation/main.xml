@@ -16,6 +16,9 @@
             android:name="email"
             app:argType="string"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
     </fragment>
     <fragment
         android:id="@+id/authFragment"
@@ -39,5 +42,22 @@
             android:name="email"
             app:argType="string"
             />
+    </fragment>
+    <fragment
+        android:id="@+id/taskFragment"
+        android:name="pl.edu.pja.project2.task.TaskFragment"
+        android:label="TaskFragment" >
+        <argument
+            android:name="eventName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="eventNote"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="eventImage"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>
