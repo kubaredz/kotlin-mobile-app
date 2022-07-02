@@ -32,6 +32,7 @@ import java.io.ByteArrayOutputStream
 
 
 class HomeFragment : Fragment() {
+    //Komponent uzyty przez aktywnosc
     lateinit var binding: FragmentHomeBinding
     lateinit var db: FirebaseFirestore
     lateinit var recyclerView: RecyclerView
@@ -57,7 +58,9 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         eventList = arrayListOf()
-        homeAdapter = HomeAdapter(eventList, ::onItemSave, ::onItemClicked, ::onItemDeleted)
+        homeAdapter = HomeAdapter(eventList, ::onItemSave, ::onItemClicked)
+        // FIXME DELETE
+//        ,::onItemDeleted
         recyclerView.adapter = homeAdapter
         homeAdapter.items = arrayListOf(arrayListOf())
         homeAdapter.notifyDataSetChanged()
@@ -68,16 +71,16 @@ class HomeFragment : Fragment() {
 //        refreshRecyclerView()
 //        refreshData()
     }
-
-    private fun onItemDeleted(id: Int, idFirebase: String) {
-// method delete z firebase
-
-// 6
-        Log.d("Info", "test TRIGGER")
-        db.collection("events").document(idFirebase).delete()
-        homeAdapter.items.removeAt(id)
-        homeAdapter.notifyDataSetChanged()
-    }
+    //FIXME DELETE
+//    private fun onItemDeleted(id: Int, idFirebase: String) {
+//// method delete z firebase
+//
+//// 6
+//        Log.d("Info", "test TRIGGER")
+//        db.collection("events").document(idFirebase).delete()
+//        homeAdapter.items.removeAt(id)
+//        homeAdapter.notifyDataSetChanged()
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -86,35 +89,37 @@ class HomeFragment : Fragment() {
 
     private fun onItemClicked(eventName: String, eventDesc: String, bitmap: Bitmap) {
         Log.d("Info", "test TRIGGERonItemClicked ")
-        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToTaskFragment(
-            eventName, eventDesc, BitMapToString(bitmap)
-        ))
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToTaskFragment(
+                eventName, eventDesc, BitMapToString(bitmap)
+            )
+        )
     }
 
     private fun refreshRecyclerView() {
         // arraylista z elementami
         homeAdapter.items.clear()
-            lifecycleScope.launch {
-                FirebaseStorageManager.setGoalsData.collect {
-                    if (it.isEmpty()) {
-                        fireBaseManager.readFireStoreData()
-                        Log.d("value", "EMPTY ${it}")
-                        homeAdapter.items.clear()
+        lifecycleScope.launch {
+            FirebaseStorageManager.setGoalsData.collect {
+                if (it.isEmpty()) {
+                    fireBaseManager.readFireStoreData()
+                    Log.d("value", "EMPTY ${it}")
+                    homeAdapter.items.clear()
 //                        homeAdapter.items = arrayListOf(arrayListOf())
-                        homeAdapter.notifyDataSetChanged()
-                    } else {
-                        homeAdapter.items.clear()
-                        homeAdapter.notifyDataSetChanged()
-                        // .sortByDescending { it.length }
-                        it.sortByDescending { it -> it[4] }
-                        // [[]]
-                        homeAdapter.items = it
-                        Log.d("value", "FLOW REPEAT ${it}")
-                        homeAdapter.notifyDataSetChanged()
-                    }
+                    homeAdapter.notifyDataSetChanged()
+                } else {
+                    homeAdapter.items.clear()
+                    homeAdapter.notifyDataSetChanged()
+                    // .sortByDescending { it.length }
+                    it.sortByDescending { it -> it[4] }
+                    // [[]]
+                    homeAdapter.items = it
+                    Log.d("value", "FLOW REPEAT ${it}")
+                    homeAdapter.notifyDataSetChanged()
                 }
-                fireBaseManager.readFireStoreData()
-                // TODO Flow automatycznie trigerrowany
+            }
+            fireBaseManager.readFireStoreData()
+            // TODO Flow automatycznie trigerrowany
         }
 //        binding.btnRefresh.setOnClickListener {
 //            fireBaseManager.readFireStoreData()

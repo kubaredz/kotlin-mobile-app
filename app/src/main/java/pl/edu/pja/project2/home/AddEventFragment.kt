@@ -52,7 +52,7 @@ class AddEventFragment : Fragment() {
             ImagePicker.with(requireActivity())
                 .crop()
                 .compress(1024)
-                .maxResultSize(1080, 1080)
+                .maxResultSize(512, 512)
                 .start()
         }
         binding.checkImage.setOnClickListener {
@@ -73,7 +73,6 @@ class AddEventFragment : Fragment() {
                         }
                     }
                 }
-                // TODO
                 CoroutineScope(Dispatchers.Main).launch {
                     delay(2500)
                     findNavController().popBackStack()

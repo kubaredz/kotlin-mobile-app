@@ -5,7 +5,6 @@ import android.widget.ImageView
 data class EventModel(
     val nameEvent: String,
     val location: String,
-    // TODO
     val image: ImageView,
     val date: String,
     val note: String,

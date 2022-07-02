@@ -33,7 +33,7 @@ class TaskFragment : Fragment() {
 
         binding.eventTitle.text = args.eventName
         binding.eventNote.text = args.eventNote
-        binding.eventImage.setImageBitmap(image.scale(1000, 1000))
+        binding.eventImage.setImageBitmap(image.scale(600, 600))
 
 
     }

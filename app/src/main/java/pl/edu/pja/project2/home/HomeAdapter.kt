@@ -14,13 +14,15 @@ import com.google.firebase.storage.FirebaseStorage
 import pl.edu.pja.project2.R
 import java.io.ByteArrayOutputStream
 
-class HomeAdapter (
+class HomeAdapter(
+    //Pobranie danych i generowanie obiektow view na danych
     private val eventList: ArrayList<EventModel>,
     private val onItemSave:
         (String, String, ImageView, String) -> Unit,
     private val onItemClicked: (String, String, Bitmap) -> Unit,
-    private val onItemLongClick: (Int, String) -> Unit,
-    ): RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+    // FIXME DELETE
+//    private val onItemLongClick: (Int, String) -> Unit,
+) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
     val storage = FirebaseStorage.getInstance()
     var items = arrayListOf<ArrayList<String>>(arrayListOf())
 
@@ -33,7 +35,8 @@ class HomeAdapter (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.task_layout,parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.task_layout, parent, false)
         return HomeViewHolder(itemView)
     }
 
@@ -60,14 +63,13 @@ class HomeAdapter (
             }
             holder.root.setOnClickListener {
                 onItemClicked(items[position][1], items[position][5], itBitmap)
-        }
-
-            holder.root.setOnClickListener {
-                onItemLongClick(position, items[position][6])
             }
+
+            // FIXME DELETE
+//            holder.root.setOnClickListener {
+//                onItemLongClick(position, items[position][6])
+//            }
         }
-
-
 
 
         // TODO
@@ -81,7 +83,6 @@ class HomeAdapter (
 
 //        onItemSave(event.nameEvent, event.location, event.image, event.date)
     }
-
 
 
     fun byteArrayToBitmap(data: ByteArray): Bitmap {
